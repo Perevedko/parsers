@@ -2,9 +2,10 @@
 [![Coverage badge](https://codecov.io/gh/mini-kep/parsers/branch/master/graphs/badge.svg)](https://codecov.io/gh/mini-kep/parsers)
 
 
-```parsers``` give you access to data sources,  use ```runner.py``` as entry point. 
+Earch parser has a caller class and a getter function. The caller class is baser on ```ParserBase``` class
+in ```runner.py``` and responsible for invoking the parser getter function.   
 
-Full dataset obtained using code below. The datapoints are from start of dataset. 
+Full dataset obtained using code below. The datapoints in each dataset are from its start. 
 
 ```python 
 from runner import Dataset
@@ -30,6 +31,63 @@ Generator in ```.yield_dicts()``` method produces dictionaries like this:
  'name': 'BRENT', 
  'value': 55.52}
 ```
+
+
+# Comments:
+
+
+EP:
+- not ok: are the comments about parser class or a getter fucntion?
+- not ok: RAW capitalised?
+- not ok: 'define source' does it mean producing url? define is very general
+- ok: we have common helper func to fetch url
+- not ok: 'public ASP calls'
+- 
+
+Parser functionality 
+====================
+
+Checklist
+---------
+1. Define Source
+2. Fetch RAW content from source
+3. Parse fetched content
+4. Yield content in desired format
+
+Define Source
+-------------
+When defining source for fetching raw data, one needs to take into consideration as part of 
+URL construction, timeframe or frequency often needs to be incorporated.
+
+Sources for fetching up RAW data can be:
+1. public API calls
+2. public ASP calls
+3. public CSV files
+
+Fetch RAW content from source
+-----------------------------
+To Fetch RAW content from websource ```fetch()``` generic method is available in parsers repo ```parsers/getter/util.py```
+
+Parse fetched content
+---------------------
+Dates, datapoint names and prices need to be parsed from fetched content. 
+Parsing is done with third party libraries listed below based on the content type:
+- XML : BeautifulSoup, xml.etree.ElementTree
+- CSV : Pandas, Numpy
+- JSON : json
+
+utilities to format dates and prices are available in ```parsers/getter/util.py``` > ```format_date()``` and ```format_value()```
+
+Yield content in desired format
+-------------------------------
+Parsed values need to be yielded from particular parses in format below:
+```
+yield {'date': date,
+          'freq': freq,
+          'name': name,
+          'value': price}
+```
+
 
 # Parser descriptions
 
